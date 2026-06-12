@@ -1,0 +1,12 @@
+venv/
+
+__pycache__/
+
+*.pyc
+
+data/processed/
+data/raw/
+
+.streamlit/
+
+.DS_Store

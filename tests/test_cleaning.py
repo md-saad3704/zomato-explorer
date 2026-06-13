@@ -1,3 +1,6 @@
+# Validation script used during data audit and cleaning phase.
+
+
 from analysis import load_raw_data
 from data_cleaning import clean_data
 

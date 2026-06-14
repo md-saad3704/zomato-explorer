@@ -76,21 +76,69 @@ zomato/
 
 └── tests/
 
+## Project Status
+
+### Completed
+
+#### Phase 1: Project Setup
+
+* Repository structure
+* Configuration management
+* Documentation
+* GitHub setup
+
+#### Phase 2: Data Audit
+
+* Dataset summary
+* Missing value analysis
+* City distribution analysis
+* Duplicate analysis
+
+#### Phase 3: Data Cleaning
+
+* Rating cleaning
+* Cost cleaning
+* Restaurant name validation
+* Text standardization
+* Parquet dataset generation
+
+#### Phase 4: Analytics Engine (In Progress)
+
+Implemented:
+
+* City KPI generation
+* Cuisine analytics
+* Locality analytics
+* Hidden Gems recommendation engine
+* Weighted restaurant ranking
+
+Analytics Functions:
+
+* get_city_data()
+* extract_cuisines()
+* get_city_kpis()
+* get_top_cuisines()
+* get_top_localities()
+* get_locality_cost_analysis()
+* get_highest_rated_areas()
+* calculate_weighted_rating()
+* get_hidden_gems()
+
+## Upcoming Features
+
+* Restaurant Leaderboards
+* Smart Search
+* City Comparison
+* Streamlit Dashboard
+* Interactive Plotly Visualizations
+* Streamlit Cloud Deployment
+
 ## Tech Stack
 
 * Python
 * Pandas
 * NumPy
-* PyArrow
 * Plotly
 * Streamlit
-
-## Status
-
-Phase 1: Data Audit ✅
-
-Phase 2: Data Quality Analysis ✅
-
-Phase 3: Data Cleaning Pipeline ✅
-
-Phase 4: Analytics Engine 🔄 In Progress
+* PyArrow
+* Git & GitHub

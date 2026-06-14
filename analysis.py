@@ -9,6 +9,9 @@ DATA_PATH,
 PROCESSED_DATA_PATH
 )
 
+from config import MIN_AREA_RESTAURANTS
+from config import MIN_HIDDEN_GEM_VOTES
+
 # ==========================================
 # DATA LOADING
 # ==========================================
@@ -159,3 +162,431 @@ Analyze duplicate records.
         "outlet_duplicates": outlet_duplicates,
         "top_restaurant_chains": top_restaurant_chains
 }
+
+
+# ==========================================
+# CITY-SPECIFIC ANALYSIS    
+# ==========================================
+
+def get_city_data(df, city):
+    """
+    Filter dataset for a selected city.
+
+    Args:
+        df (pd.DataFrame)
+        city (str)
+
+    Returns:
+        pd.DataFrame
+    """
+
+    city_df = df[
+        df["city"] == city
+    ].copy()
+
+    return city_df
+
+
+# ==========================================
+# CUISINE ANALYSIS  
+# ==========================================
+
+
+def extract_cuisines(df):
+    """
+    Extract individual cuisines from a dataframe.
+
+    Args:
+        df (pd.DataFrame)
+
+    Returns:
+        pd.Series
+    """
+
+    cuisines = (
+        df["cuisine"]
+        .dropna()
+        .str.split(",")
+        .explode()
+        .str.strip()
+    )
+
+    cuisines = cuisines[
+        cuisines != ""
+    ]
+
+    return cuisines
+
+# ==========================================
+# KPI GENERATION        
+# ==========================================
+
+
+def get_city_kpis(df, city):
+    """
+    Generate KPI metrics for a city.
+
+    Args:
+        df (pd.DataFrame)
+        city (str)
+
+    Returns:
+        dict
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    cuisines = extract_cuisines(
+        city_df
+    )
+
+    kpis = {
+        "total_restaurants": len(city_df),
+
+        "average_rating": round(
+            city_df["rating"].mean(),
+            2
+        ),
+
+        "average_cost": int(
+            round(
+                city_df["cost_for_two"].mean()
+            )
+        ),
+
+        "top_cuisine": cuisines
+        .value_counts()
+        .idxmax(),
+
+        "total_cuisines": cuisines
+        .nunique()
+    }
+
+    return kpis
+
+
+# ==========================================
+# TOP CUISINE ANALYSIS  
+# ==========================================
+
+
+def get_top_cuisines(df, city, top_n=10):
+    """
+    Get most popular cuisines in a city.
+
+    Args:
+        df (pd.DataFrame)
+        city (str)
+        top_n (int)
+
+    Returns:
+        pd.DataFrame
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    cuisines = extract_cuisines(
+        city_df
+    )
+
+    top_cuisines = (
+        cuisines
+        .value_counts()
+        .head(top_n)
+        .reset_index()
+    )
+
+    top_cuisines.columns = [
+        "cuisine",
+        "restaurant_count"
+    ]
+
+    return top_cuisines
+
+
+# ==========================================
+# TOP LOCALITY ANALYSIS 
+# ==========================================
+
+
+def get_top_localities(
+    df,
+    city,
+    top_n=10
+):
+    """
+    Get localities with the highest
+    restaurant concentration.
+
+    Args:
+        df (pd.DataFrame)
+        city (str)
+        top_n (int)
+
+    Returns:
+        pd.DataFrame
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    top_localities = (
+        city_df["area"]
+        .value_counts()
+        .head(top_n)
+        .reset_index()
+    )
+
+    top_localities.columns = [
+        "area",
+        "restaurant_count"
+    ]
+
+    return top_localities
+
+
+
+# ==========================================
+# LOCALITY COST ANALYSIS
+# ==========================================
+
+
+def get_locality_cost_analysis(
+    df,
+    city,
+    min_restaurants=10,
+    top_n=10
+):
+    """
+    Analyze average cost by locality.
+
+    Args:
+        df (pd.DataFrame)
+        city (str)
+        min_restaurants (int)
+
+    Returns:
+        pd.DataFrame
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    locality_analysis = (
+        city_df
+        .groupby("area")
+        .agg(
+            restaurant_count=(
+                "name",
+                "count"
+            ),
+            average_cost=(
+                "cost_for_two",
+                "mean"
+            )
+        )
+        .reset_index()
+    )
+
+    locality_analysis = locality_analysis[
+        locality_analysis[
+            "restaurant_count"
+        ] >= min_restaurants
+    ]
+
+    locality_analysis[
+        "average_cost"
+    ] = locality_analysis[
+        "average_cost"
+    ].round().astype(int)
+
+    locality_analysis = (
+        locality_analysis
+        .sort_values(
+            by="average_cost",
+            ascending=False
+        )
+        .reset_index(drop=True)
+    )
+    
+    locality_analysis = (
+       locality_analysis
+        .head(top_n)
+    )
+
+    return locality_analysis
+
+
+# ==========================================
+# HIGHEST RATED AREAS ANALYSIS
+# ==========================================
+
+
+def get_highest_rated_areas(
+    df,
+    city,
+    min_restaurants=MIN_AREA_RESTAURANTS,
+    top_n=10
+):
+    """
+    Get highest rated areas in a city.
+
+    Args:
+        df (pd.DataFrame)
+        city (str)
+        min_restaurants (int)
+        top_n (int)
+
+    Returns:
+        pd.DataFrame
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    area_ratings = (
+        city_df
+        .groupby("area")
+        .agg(
+            restaurant_count=(
+                "name",
+                "count"
+            ),
+            average_rating=(
+                "rating",
+                "mean"
+            )
+        )
+        .reset_index()
+    )
+
+    area_ratings = area_ratings[
+        area_ratings["restaurant_count"]
+        >= min_restaurants
+    ]
+
+    area_ratings["average_rating"] = (
+        area_ratings["average_rating"]
+        .round(2)
+    )
+
+    area_ratings = (
+        area_ratings
+        .sort_values(
+            by="average_rating",
+            ascending=False
+        )
+        .head(top_n)
+        .reset_index(drop=True)
+    )
+
+    return area_ratings
+
+
+
+# ==========================================
+# RATING WEIGHTING FUNCTION
+# ==========================================
+
+
+
+def calculate_weighted_rating(
+    rating,
+    votes,
+    average_rating,
+    minimum_votes
+):
+    """
+    IMDb-style weighted rating.
+    """
+
+    return (
+        (votes / (votes + minimum_votes)) * rating
+        +
+        (minimum_votes / (votes + minimum_votes))
+        * average_rating
+    )
+    
+    
+# ==========================================
+# HIDDEN GEMS ANALYSIS
+# ==========================================
+
+
+def get_hidden_gems(
+    df,
+    city,
+    min_rating=4.0,
+    max_cost=500,
+    min_votes=MIN_HIDDEN_GEM_VOTES,
+    top_n=20
+):
+    """
+    Find affordable highly-rated restaurants.
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    city_average_rating = (
+        city_df["rating"]
+        .mean()
+    )
+
+    gems = city_df[
+        (city_df["rating"] >= min_rating)
+        &
+        (city_df["cost_for_two"] <= max_cost)
+        &
+        (city_df["rating_count"] >= min_votes)
+    ].copy()
+
+    gems["weighted_rating"] = gems.apply(
+        lambda row: calculate_weighted_rating(
+            rating=row["rating"],
+            votes=row["rating_count"],
+            average_rating=city_average_rating,
+            minimum_votes=min_votes
+        ),
+        axis=1
+    )
+
+    gems = gems.sort_values(
+        by="weighted_rating",
+        ascending=False
+    )
+
+    columns_to_keep = [
+        "name",
+        "area",
+        "cuisine",
+        "rating",
+        "rating_count",
+        "cost_for_two",
+        "weighted_rating"
+    ]
+
+    gems["weighted_rating"] = (
+        gems["weighted_rating"]
+        .round(3)
+    )
+
+    return (
+        gems[columns_to_keep]
+        .head(top_n)
+        .reset_index(drop=True)
+    )

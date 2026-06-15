@@ -590,3 +590,191 @@ def get_hidden_gems(
         .head(top_n)
         .reset_index(drop=True)
     )
+    
+    
+# ==========================================
+# TOP RESTAURANTS ANALYSIS
+# ==========================================
+
+
+
+
+def get_top_restaurants(
+    df,
+    city,
+    min_votes=MIN_HIDDEN_GEM_VOTES ,
+    top_n=10
+):
+    """
+    Get top restaurants in a city using
+    weighted rating.
+
+    Args:
+        df (pd.DataFrame)
+        city (str)
+        min_votes (int)
+        top_n (int)
+
+    Returns:
+        pd.DataFrame
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    city_average_rating = (
+        city_df["rating"]
+        .mean()
+    )
+
+    restaurants = city_df[
+        city_df["rating_count"] >= min_votes
+    ].copy()
+
+    restaurants["weighted_rating"] = (
+        restaurants.apply(
+            lambda row:
+            calculate_weighted_rating(
+                rating=row["rating"],
+                votes=row["rating_count"],
+                average_rating=city_average_rating,
+                minimum_votes=min_votes
+            ),
+            axis=1
+        )
+    )
+
+    restaurants["weighted_rating"] = (
+        restaurants["weighted_rating"]
+        .round(3)
+    )
+
+    restaurants = (
+        restaurants
+        .sort_values(
+            by="weighted_rating",
+            ascending=False
+        )
+    )
+
+    columns_to_keep = [
+        "name",
+        "area",
+        "cuisine",
+        "rating",
+        "rating_count",
+        "cost_for_two",
+        "weighted_rating"
+    ]
+
+    return (
+        restaurants[columns_to_keep]
+        .head(top_n)
+        .reset_index(drop=True)
+    )
+    
+    
+ 
+ # ==========================================
+ # MOST POPULAR RESTAURANTS ANALYSIS
+ # ==========================================   
+    
+    
+def get_most_popular_restaurants(
+    df,
+    city,
+    top_n=10
+):
+    """
+    Get restaurants with the highest
+    number of ratings.
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    restaurants = (
+        city_df
+        .sort_values(
+            by="rating_count",
+            ascending=False
+        )
+    )
+
+    columns_to_keep = [
+        "name",
+        "area",
+        "cuisine",
+        "rating",
+        "rating_count",
+        "cost_for_two"
+    ]
+
+    return (
+        restaurants[columns_to_keep]
+        .head(top_n)
+        .reset_index(drop=True)
+    )
+    
+    
+    # ==========================================
+    # RESTAURANT SEARCH FUNCTION
+    # ==========================================
+    
+    
+    
+def search_restaurants(
+    df,
+    city,
+    query,
+    top_n=20
+):
+    """
+    Search restaurants by name.
+
+    Args:
+        df (pd.DataFrame)
+        city (str)
+        query (str)
+        top_n (int)
+
+    Returns:
+        pd.DataFrame
+    """
+
+    city_df = get_city_data(
+        df,
+        city
+    )
+
+    results = city_df[
+        city_df["name"]
+        .str.contains(
+            query,
+            case=False,
+            na=False
+        )
+    ].copy()
+
+    columns_to_keep = [
+        "name",
+        "area",
+        "cuisine",
+        "rating",
+        "rating_count",
+        "cost_for_two"
+    ]
+
+    return (
+        results[columns_to_keep]
+        .sort_values(
+            by="rating_count",
+            ascending=False
+        )
+        .head(top_n)
+        .reset_index(drop=True)
+    )

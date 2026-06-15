@@ -17,13 +17,18 @@ from analysis import (
     get_top_localities,
     get_locality_cost_analysis,
     get_highest_rated_areas,
-    get_hidden_gems
-    
+    get_hidden_gems,
+    get_top_restaurants,
+    get_most_popular_restaurants,
+    search_restaurants
 )
 
-# Validation script for city-specific analysis and cuisine extraction.
+# # Validation script for city-specific analysis and cuisine extraction.
 
 df = load_clean_data()
+
+
+# Analyze and display city-specific data and KPIs for a sample city (e.g., Lucknow)
 
 city_df = get_city_data(
     df,
@@ -67,6 +72,7 @@ for key, value in kpis.items():
     print(
         f"{key}: {value}"
     )
+
     
 # Get and display top cuisines in the city  
   
@@ -126,7 +132,6 @@ highest_rated = (
 print(highest_rated)
 
 
-
 # Analyze and display hidden gems in the city
 
 print("\nHIDDEN GEMS\n")
@@ -137,3 +142,44 @@ hidden_gems = get_hidden_gems(
 )
 
 print(hidden_gems.head(10))
+    
+# Analyze and display top restaurants in the city
+
+print("\nTOP RESTAURANTS\n")
+
+top_restaurants = (
+    get_top_restaurants(
+        df,
+        "Lucknow"
+    )
+)
+
+print(top_restaurants)
+
+
+# Analyze and display most popular restaurants in the city based on votes and ratings
+
+print("\nMOST POPULAR RESTAURANTS\n")
+
+popular_restaurants = (
+    get_most_popular_restaurants(
+        df,
+        "Lucknow"
+    )
+)
+
+print(popular_restaurants)
+
+
+# Search for restaurants in the city based on a query and display results
+
+
+print("\nSEARCH RESULTS\n")
+
+search_results = search_restaurants(
+    df,
+    "Lucknow",
+    "tunday"
+)
+
+print(search_results)

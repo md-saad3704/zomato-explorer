@@ -95,8 +95,6 @@ def get_city_distribution(df):
     Returns:
         pd.DataFrame
     """
-
-    pd.DataFrame
     
 
     city_distribution = (
@@ -677,9 +675,9 @@ def get_top_restaurants(
     
     
  
- # ==========================================
- # MOST POPULAR RESTAURANTS ANALYSIS
- # ==========================================   
+# ==========================================
+# MOST POPULAR RESTAURANTS ANALYSIS
+# ==========================================   
     
     
 def get_most_popular_restaurants(
@@ -721,9 +719,9 @@ def get_most_popular_restaurants(
     )
     
     
-    # ==========================================
-    # RESTAURANT SEARCH FUNCTION
-    # ==========================================
+# ==========================================
+# RESTAURANT SEARCH FUNCTION
+# ==========================================
     
     
     

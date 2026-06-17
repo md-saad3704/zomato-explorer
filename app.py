@@ -82,6 +82,82 @@ if selected_page == "Overview":
     col4.metric("Top Cuisine", kpis["top_cuisine"])
 
     col5.metric("Cuisine Types", kpis["total_cuisines"])
+    
+    st.markdown("---")
+
+    col1, col2 = st.columns(2)
+
+    # Top Cuisines Snapshot
+
+    with col1:
+
+        with st.container(border=True):
+
+            st.subheader("Top 5 Cuisines")
+
+            top_cuisines = get_top_cuisines(
+                df,
+                selected_city,
+                top_n=5
+            )
+
+            fig = px.bar(
+                top_cuisines,
+                x="restaurant_count",
+                y="cuisine",
+                orientation="h"
+            )
+
+            fig.update_layout(
+                height=350,
+                margin=dict(
+                    l=20,
+                    r=20,
+                    t=20,
+                    b=20
+                )
+            )
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True
+            )
+
+    # Top Areas Snapshot
+
+    with col2:
+
+        with st.container(border=True):
+
+            st.subheader("Top 5 Restaurant Areas")
+
+            top_areas = get_top_localities(
+                df,
+                selected_city,
+                top_n=5
+            )
+
+            fig = px.bar(
+                top_areas,
+                x="restaurant_count",
+                y="area",
+                orientation="h"
+            )
+
+            fig.update_layout(
+                height=350,
+                margin=dict(
+                    l=20,
+                    r=20,
+                    t=20,
+                    b=20
+                )
+            )
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True
+            )
 
 # ==================================================
 # CUISINE INSIGHTS PAGE

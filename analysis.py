@@ -527,3 +527,8 @@ def search_restaurants(df, city, query, top_n=20):
         .head(top_n)
         .reset_index(drop=True)
     )
+
+
+
+
+

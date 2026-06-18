@@ -1,6 +1,8 @@
 import streamlit as st
 import plotly.express as px
 
+from utils import apply_space_theme
+
 
 from styles import (
     PAGE_TITLE,
@@ -8,6 +10,7 @@ from styles import (
     OVERVIEW_CHART_HEIGHT,
     CHART_MARGIN,
     DATASET_DISCLAIMER,
+    CUSTOM_CSS,
 )
 
 from analysis import (
@@ -28,6 +31,8 @@ from analysis import (
 # --------------------------------------------------
 
 st.set_page_config(page_title=PAGE_TITLE, layout="wide")
+
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # --------------------------------------------------
 # LOAD DATA
@@ -60,17 +65,50 @@ selected_city = st.sidebar.selectbox("Select City", cities)
 # DATASET DISCLAIMER
 # --------------------------------------------------
 
-st.info(DATASET_DISCLAIMER)
+
 # ==================================================
 # OVERVIEW PAGE
 # ==================================================
 
 if selected_page == "Overview":
 
-    st.title("Zomato India Restaurant Explorer")
+    st.markdown(
+        """
+        <h1 style="
+            text-align:center;
+            color:#00D4FF;
+            font-size:52px;
+            font-family:Orbitron,sans-serif;
+            letter-spacing:3px;
+            text-shadow:
+                0 0 10px rgba(0,212,255,0.6),
+                0 0 20px rgba(0,212,255,0.3);
+        ">
+            ZOMATO INDIA EXPLORER
+        </h1>
+        """,
+        unsafe_allow_html=True
+    )
 
-    st.markdown(f"### Exploring Restaurants in {selected_city}")
+    st.markdown(
+        f"""
+        <p style="
+            text-align:center;
+            color:#8888AA;
+            font-size:18px;
+            letter-spacing:2px;
+            margin-top:-15px;
+        ">
+            Navigating India's Food Galaxy • Mission Zone: {selected_city}
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
 
+    st.divider()
+    
+    st.info(DATASET_DISCLAIMER)
+    
     kpis = get_city_kpis(df, selected_city)
 
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -147,10 +185,7 @@ elif selected_page == "Cuisine Insights":
             title=f"Top Cuisines in {selected_city}",
         )
 
-        fig.update_layout(
-    height=OVERVIEW_CHART_HEIGHT,
-    margin=CHART_MARGIN
-)
+        fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -196,10 +231,7 @@ elif selected_page == "Locality Analysis":
 
             fig = px.bar(highest_rated, x="average_rating", y="area", orientation="h")
 
-            fig.update_layout(
-    height=OVERVIEW_CHART_HEIGHT,
-    margin=CHART_MARGIN
-)
+            fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
 
             st.plotly_chart(fig, use_container_width=True)
 

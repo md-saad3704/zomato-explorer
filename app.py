@@ -1,6 +1,15 @@
 import streamlit as st
 import plotly.express as px
 
+
+from styles import (
+    PAGE_TITLE,
+    CHART_HEIGHT,
+    OVERVIEW_CHART_HEIGHT,
+    CHART_MARGIN,
+    DATASET_DISCLAIMER,
+)
+
 from analysis import (
     load_clean_data,
     get_city_kpis,
@@ -18,7 +27,7 @@ from analysis import (
 # PAGE CONFIG
 # --------------------------------------------------
 
-st.set_page_config(page_title="Zomato India Restaurant Explorer", layout="wide")
+st.set_page_config(page_title=PAGE_TITLE, layout="wide")
 
 # --------------------------------------------------
 # LOAD DATA
@@ -51,14 +60,7 @@ selected_city = st.sidebar.selectbox("Select City", cities)
 # DATASET DISCLAIMER
 # --------------------------------------------------
 
-st.info("""
-    Dataset Snapshot: 2019
-
-    This dashboard analyzes historical Zomato India restaurant data.
-    Restaurant availability, ratings, pricing, and operations may have
-    changed since data collection.
-    """)
-
+st.info(DATASET_DISCLAIMER)
 # ==================================================
 # OVERVIEW PAGE
 # ==================================================
@@ -82,7 +84,7 @@ if selected_page == "Overview":
     col4.metric("Top Cuisine", kpis["top_cuisine"])
 
     col5.metric("Cuisine Types", kpis["total_cuisines"])
-    
+
     st.markdown("---")
 
     col1, col2 = st.columns(2)
@@ -95,33 +97,15 @@ if selected_page == "Overview":
 
             st.subheader("Top 5 Cuisines")
 
-            top_cuisines = get_top_cuisines(
-                df,
-                selected_city,
-                top_n=5
-            )
+            top_cuisines = get_top_cuisines(df, selected_city, top_n=5)
 
             fig = px.bar(
-                top_cuisines,
-                x="restaurant_count",
-                y="cuisine",
-                orientation="h"
+                top_cuisines, x="restaurant_count", y="cuisine", orientation="h"
             )
 
-            fig.update_layout(
-                height=350,
-                margin=dict(
-                    l=20,
-                    r=20,
-                    t=20,
-                    b=20
-                )
-            )
+            fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
 
-            st.plotly_chart(
-                fig,
-                use_container_width=True
-            )
+            st.plotly_chart(fig, use_container_width=True)
 
     # Top Areas Snapshot
 
@@ -131,33 +115,13 @@ if selected_page == "Overview":
 
             st.subheader("Top 5 Restaurant Areas")
 
-            top_areas = get_top_localities(
-                df,
-                selected_city,
-                top_n=5
-            )
+            top_areas = get_top_localities(df, selected_city, top_n=5)
 
-            fig = px.bar(
-                top_areas,
-                x="restaurant_count",
-                y="area",
-                orientation="h"
-            )
+            fig = px.bar(top_areas, x="restaurant_count", y="area", orientation="h")
 
-            fig.update_layout(
-                height=350,
-                margin=dict(
-                    l=20,
-                    r=20,
-                    t=20,
-                    b=20
-                )
-            )
+            fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
 
-            st.plotly_chart(
-                fig,
-                use_container_width=True
-            )
+            st.plotly_chart(fig, use_container_width=True)
 
 # ==================================================
 # CUISINE INSIGHTS PAGE
@@ -183,7 +147,10 @@ elif selected_page == "Cuisine Insights":
             title=f"Top Cuisines in {selected_city}",
         )
 
-        fig.update_layout(height=600, title_x=0.5)
+        fig.update_layout(
+    height=OVERVIEW_CHART_HEIGHT,
+    margin=CHART_MARGIN
+)
 
         st.plotly_chart(fig, use_container_width=True)
 
@@ -213,7 +180,7 @@ elif selected_page == "Locality Analysis":
                 top_localities, x="restaurant_count", y="area", orientation="h"
             )
 
-            fig.update_layout(height=500, title_x=0.5)
+            fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
 
             st.plotly_chart(fig, use_container_width=True)
 
@@ -229,7 +196,10 @@ elif selected_page == "Locality Analysis":
 
             fig = px.bar(highest_rated, x="average_rating", y="area", orientation="h")
 
-            fig.update_layout(height=500, title_x=0.5)
+            fig.update_layout(
+    height=OVERVIEW_CHART_HEIGHT,
+    margin=CHART_MARGIN
+)
 
             st.plotly_chart(fig, use_container_width=True)
 
@@ -245,7 +215,7 @@ elif selected_page == "Locality Analysis":
             locality_costs.head(10), x="average_cost", y="area", orientation="h"
         )
 
-        fig.update_layout(height=500, title_x=0.5)
+        fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
 
         st.plotly_chart(fig, use_container_width=True)
 

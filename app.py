@@ -6,9 +6,7 @@ from utils import apply_space_theme
 
 from styles import (
     PAGE_TITLE,
-    CHART_HEIGHT,
     OVERVIEW_CHART_HEIGHT,
-    CHART_MARGIN,
     DATASET_DISCLAIMER,
     CUSTOM_CSS,
 )
@@ -45,6 +43,100 @@ def load_data():
 
 
 df = load_data()
+
+
+# --------------------------------------------------
+# COMPONENTS
+# --------------------------------------------------
+
+
+def page_title(title):
+    
+    st.markdown(
+        f"""
+        <h1 style="
+            color:#00D4FF;
+            font-family:Orbitron;
+            letter-spacing:2px;
+        ">
+            {title}
+        </h1>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def section_title(title, color="#00D4FF"):
+    st.markdown(
+        f"""
+        <h2 style="
+            color:{color};
+            font-family:Orbitron;
+            letter-spacing:2px;
+            text-shadow:0 0 10px rgba(0,212,255,0.4);
+        ">
+            {title}
+        </h2>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_bar_chart(fig):
+
+    fig.update_layout(
+        height=OVERVIEW_CHART_HEIGHT,
+        margin=dict(l=20, r=20, t=20, b=20)
+    )
+
+    fig.update_yaxes(
+        categoryorder="total ascending"
+    )
+
+    fig = apply_space_theme(fig)
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+
+
+def page_subtitle(text):
+    st.markdown(
+        f"""
+        <p style="
+            color:#8888AA;
+            font-size:18px;
+        ">
+            {text}
+        </p>
+        """,
+        unsafe_allow_html=True,
+    )
+    
+    
+
+def render_footer():
+    st.markdown("---")
+
+    st.markdown(
+        """
+        <center>
+
+        <h3 style="color:#00D4FF;">
+        ZOMATO INDIA RESTAURANT EXPLORER
+        </h3>
+
+        <p>Built by Muhammad Saad Kamal</p>
+
+        <p>Restaurant Intelligence Dashboard | 224K+ Restaurants | 83 Cities</p>
+
+        <p>Historical Dataset (2019)</p>
+
+        </center>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # --------------------------------------------------
 # SIDEBAR
@@ -86,8 +178,8 @@ st.sidebar.markdown(
 )
 
 
-selected_page = st.sidebar.radio(
-    "Navigation",
+selected_page = st.sidebar.selectbox(
+    "MISSION MODULE",
     ["Overview", "Cuisine Insights", "Locality Analysis", "Restaurant Discovery"],
 )
 
@@ -112,7 +204,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 
-st.sidebar.info(f"📡 {selected_city}")
+st.sidebar.info(f"{selected_city}")
 
 
 st.sidebar.markdown("---")
@@ -132,8 +224,9 @@ st.sidebar.markdown(
 )
 
 st.sidebar.success("Historical Dataset 2019 Snapshot")
-
-
+    
+    
+    
 # ==================================================
 # OVERVIEW PAGE
 # ==================================================
@@ -167,7 +260,14 @@ if selected_page == "Overview":
             letter-spacing:2px;
             margin-top:-15px;
         ">
-            Navigating India's Food Galaxy • Mission Zone: {selected_city}
+            Navigating India's Food Galaxy • Mission Zone: <span style="
+    color:#00FF88;
+    font-weight:700;
+    text-shadow:
+        0 0 10px rgba(0,255,136,0.5);
+">
+    {selected_city}
+</span>
         </p>
         """,
         unsafe_allow_html=True,
@@ -175,13 +275,9 @@ if selected_page == "Overview":
 
     st.divider()
 
-    # --------------------------------------------------
     # DATASET DISCLAIMER
-    # --------------------------------------------------
 
     st.info(DATASET_DISCLAIMER)
-    
-    
 
     kpis = get_city_kpis(df, selected_city)
 
@@ -207,20 +303,7 @@ if selected_page == "Overview":
 
         with st.container(border=True):
 
-            st.markdown(
-                """
-    <h2 style="
-        color:#00D4FF;
-        font-family:Orbitron;
-        letter-spacing:2px;
-        margin-bottom:15px;
-        text-shadow:0 0 10px rgba(0,212,255,0.4);
-    ">
-        CUISINE INTELLIGENCE
-    </h2>
-    """,
-                unsafe_allow_html=True,
-            )
+            section_title("CUISINE INTELLIGENCE")
 
             top_cuisines = get_top_cuisines(df, selected_city, top_n=5)
 
@@ -228,9 +311,7 @@ if selected_page == "Overview":
                 top_cuisines, x="restaurant_count", y="cuisine", orientation="h"
             )
 
-            fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
-
-            st.plotly_chart(fig, use_container_width=True)
+            render_bar_chart(fig)
 
     # Top Areas Snapshot
 
@@ -238,28 +319,13 @@ if selected_page == "Overview":
 
         with st.container(border=True):
 
-            st.markdown(
-                """
-    <h2 style="
-        color:#00D4FF;
-        font-family:Orbitron;
-        letter-spacing:2px;
-        margin-bottom:15px;
-        text-shadow:0 0 10px rgba(0,212,255,0.4);
-    ">
-        AREA HEATMAP
-    </h2>
-    """,
-                unsafe_allow_html=True,
-            )
+            section_title("AREA HEATMAP")
 
             top_areas = get_top_localities(df, selected_city, top_n=5)
 
             fig = px.bar(top_areas, x="restaurant_count", y="area", orientation="h")
 
-            fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
-
-            st.plotly_chart(fig, use_container_width=True)
+            render_bar_chart(fig)
 
 # ==================================================
 # CUISINE INSIGHTS PAGE
@@ -267,9 +333,11 @@ if selected_page == "Overview":
 
 elif selected_page == "Cuisine Insights":
 
-    st.title("Cuisine Insights")
+    page_title("CUISINE INSIGHTS")
 
-    st.markdown(f"### Cuisine Trends in {selected_city}")
+    
+    
+    page_subtitle(f"Culinary distribution analysis for {selected_city}")
 
     with st.container(border=True):
 
@@ -282,12 +350,9 @@ elif selected_page == "Cuisine Insights":
             x="restaurant_count",
             y="cuisine",
             orientation="h",
-            title=f"Top Cuisines in {selected_city}",
         )
 
-        fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
-
-        st.plotly_chart(fig, use_container_width=True)
+        render_bar_chart(fig)
 
 # ==================================================
 # LOCALITY ANALYSIS PAGE
@@ -295,9 +360,9 @@ elif selected_page == "Cuisine Insights":
 
 elif selected_page == "Locality Analysis":
 
-    st.title("Locality Analysis")
+    page_title("LOCALITY ANALYSIS")
 
-    st.markdown(f"### Locality Insights for {selected_city}")
+    page_subtitle(f"Locality Insights for {selected_city}")
 
     col1, col2 = st.columns([1, 1], gap="large")
 
@@ -307,7 +372,7 @@ elif selected_page == "Locality Analysis":
 
         with st.container(border=True):
 
-            st.subheader("Top Restaurant Areas")
+            section_title("AREA DENSITY")
 
             top_localities = get_top_localities(df, selected_city)
 
@@ -315,9 +380,7 @@ elif selected_page == "Locality Analysis":
                 top_localities, x="restaurant_count", y="area", orientation="h"
             )
 
-            fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
-
-            st.plotly_chart(fig, use_container_width=True)
+            render_bar_chart(fig)
 
     # Highest Rated Areas
 
@@ -325,21 +388,19 @@ elif selected_page == "Locality Analysis":
 
         with st.container(border=True):
 
-            st.subheader("Highest Rated Areas")
+            section_title("QUALITY INDEX")
 
             highest_rated = get_highest_rated_areas(df, selected_city)
 
             fig = px.bar(highest_rated, x="average_rating", y="area", orientation="h")
 
-            fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
-
-            st.plotly_chart(fig, use_container_width=True)
+            render_bar_chart(fig)
 
     st.markdown("")
 
     with st.container(border=True):
 
-        st.subheader("Most Expensive Areas")
+        section_title("COST INTELLIGENCE")
 
         locality_costs = get_locality_cost_analysis(df, selected_city)
 
@@ -347,9 +408,7 @@ elif selected_page == "Locality Analysis":
             locality_costs.head(10), x="average_cost", y="area", orientation="h"
         )
 
-        fig.update_layout(height=OVERVIEW_CHART_HEIGHT, margin=CHART_MARGIN)
-
-        st.plotly_chart(fig, use_container_width=True)
+        render_bar_chart(fig)
 
 # ==================================================
 # RESTAURANT DISCOVERY PAGE
@@ -357,9 +416,9 @@ elif selected_page == "Locality Analysis":
 
 elif selected_page == "Restaurant Discovery":
 
-    st.title("Restaurant Discovery")
+    page_title("RESTAURANT DISCOVERY")
 
-    st.markdown(f"### Discover Restaurants in {selected_city}")
+    page_subtitle(f"Discover Restaurants in {selected_city}")
 
     # --------------------------------------------------
     # RESTAURANT SEARCH
@@ -367,7 +426,9 @@ elif selected_page == "Restaurant Discovery":
 
     with st.container(border=True):
 
-        st.subheader("Restaurant Search")
+        st.markdown(
+            "<h2 style='color:#00D4FF;'>RESTAURANT SEARCH</h2>", unsafe_allow_html=True
+        )
 
         search_query = st.text_input("", placeholder="Search restaurants...")
 
@@ -389,7 +450,10 @@ elif selected_page == "Restaurant Discovery":
                 )
 
                 st.dataframe(
-                    search_results_display, use_container_width=True, hide_index=True
+                    search_results_display,
+                    use_container_width=True,
+                    hide_index=True,
+                    height=350,
                 )
 
             else:
@@ -400,7 +464,20 @@ elif selected_page == "Restaurant Discovery":
 
     with st.container(border=True):
 
-        st.subheader("Hidden Gems")
+        st.markdown(
+            """
+    <h2 style="
+        color:#00FF88;
+        font-family:Orbitron;
+        letter-spacing:2px;
+        text-shadow:
+            0 0 12px rgba(0,255,136,0.4);
+    ">
+        HIDDEN GEMS
+    </h2>
+    """,
+            unsafe_allow_html=True,
+        )
 
         hidden_gems = get_hidden_gems(df, selected_city)
 
@@ -416,7 +493,9 @@ elif selected_page == "Restaurant Discovery":
             }
         )
 
-        st.dataframe(hidden_gems_display, use_container_width=True, hide_index=True)
+        st.dataframe(
+            hidden_gems_display, use_container_width=True, hide_index=True, height=350
+        )
 
     st.markdown("---")
 
@@ -445,6 +524,7 @@ elif selected_page == "Restaurant Discovery":
                 ),
                 use_container_width=True,
                 hide_index=True,
+                height=350,
             )
 
     # Most Popular Restaurants
@@ -469,4 +549,12 @@ elif selected_page == "Restaurant Discovery":
                 ),
                 use_container_width=True,
                 hide_index=True,
+                height=350,
             )
+
+# ==================================================
+# FOOTER
+# ==================================================
+
+
+render_footer()

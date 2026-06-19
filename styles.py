@@ -10,16 +10,10 @@ TOP_N = 10
 # CHART SETTINGS
 # ==================================================
 
-CHART_HEIGHT = 500
 
 OVERVIEW_CHART_HEIGHT = 350
 
-CHART_MARGIN = dict(
-    l=20,
-    r=20,
-    t=20,
-    b=20
-)
+CHART_MARGIN = dict(l=20, r=20, t=20, b=20)
 
 # ==================================================
 # TABLE SETTINGS
@@ -201,7 +195,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     border-radius: 18px;
 
     box-shadow:
-        0 0 25px rgba(0,212,255,0.12);
+    0 0 18px rgba(0,212,255,0.10),
+    inset 0 0 10px rgba(0,212,255,0.03);
 
     transition: all 0.3s ease;
 }
@@ -235,9 +230,16 @@ div[data-testid="stVerticalBlockBorderWrapper"]:hover {
 
 [data-testid="stDataFrame"] {
 
-    border: 1px solid rgba(0,212,255,0.20);
+    border: 1px solid rgba(0,212,255,0.25);
 
-    border-radius: 12px;
+    border-radius: 16px;
+
+    box-shadow:
+        0 0 15px rgba(0,212,255,0.08);
+
+    overflow: hidden;
+
+    background: rgba(10,10,26,0.95);
 }
 
 /* ==================================================
@@ -275,7 +277,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:hover {
     border-color: rgba(0,212,255,0.70);
 
     box-shadow:
-        0 0 15px rgba(0,212,255,0.25);
+        0 0 20px rgba(0,212,255,0.12);
 }
 
 /* ==================================================
@@ -386,8 +388,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:hover {
     }
 }
 
+
+
 </style>
 """
-
-
-

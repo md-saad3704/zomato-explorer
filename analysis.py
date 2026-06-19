@@ -4,10 +4,12 @@
 
 import pandas as pd
 
-from config import DATA_PATH, PROCESSED_DATA_PATH
-
-from config import MIN_AREA_RESTAURANTS
-from config import MIN_HIDDEN_GEM_VOTES
+from config import (
+    DATA_PATH,
+    PROCESSED_DATA_PATH,
+    MIN_AREA_RESTAURANTS,
+    MIN_HIDDEN_GEM_VOTES,
+)
 
 # ==========================================
 # DATA LOADING
@@ -37,6 +39,18 @@ def load_clean_data():
 # ==========================================
 # DATASET AUDIT FUNCTIONS
 # ==========================================
+
+
+
+RESTAURANT_COLUMNS = [
+    "name",
+    "area",
+    "cuisine",
+    "rating",
+    "rating_count",
+    "cost_for_two",
+]
+
 
 
 def get_dataset_summary(df):
@@ -394,19 +408,11 @@ def get_hidden_gems(
 
     gems = gems.sort_values(by="weighted_rating", ascending=False)
 
-    columns_to_keep = [
-        "name",
-        "area",
-        "cuisine",
-        "rating",
-        "rating_count",
-        "cost_for_two",
-        "weighted_rating",
-    ]
+    RESTAURANT_COLUMNS
 
     gems["weighted_rating"] = gems["weighted_rating"].round(3)
 
-    return gems[columns_to_keep].head(top_n).reset_index(drop=True)
+    return gems[RESTAURANT_COLUMNS].head(top_n).reset_index(drop=True)
 
 
 # ==========================================
@@ -449,17 +455,7 @@ def get_top_restaurants(df, city, min_votes=MIN_HIDDEN_GEM_VOTES, top_n=10):
 
     restaurants = restaurants.sort_values(by="weighted_rating", ascending=False)
 
-    columns_to_keep = [
-        "name",
-        "area",
-        "cuisine",
-        "rating",
-        "rating_count",
-        "cost_for_two",
-        "weighted_rating",
-    ]
-
-    return restaurants[columns_to_keep].head(top_n).reset_index(drop=True)
+    return restaurants[RESTAURANT_COLUMNS].head(top_n).reset_index(drop=True)
 
 
 # ==========================================
@@ -477,16 +473,9 @@ def get_most_popular_restaurants(df, city, top_n=10):
 
     restaurants = city_df.sort_values(by="rating_count", ascending=False)
 
-    columns_to_keep = [
-        "name",
-        "area",
-        "cuisine",
-        "rating",
-        "rating_count",
-        "cost_for_two",
-    ]
+    RESTAURANT_COLUMNS
 
-    return restaurants[columns_to_keep].head(top_n).reset_index(drop=True)
+    return restaurants[RESTAURANT_COLUMNS].head(top_n).reset_index(drop=True)
 
 
 # ==========================================
@@ -512,17 +501,10 @@ def search_restaurants(df, city, query, top_n=20):
 
     results = city_df[city_df["name"].str.contains(query, case=False, na=False)].copy()
 
-    columns_to_keep = [
-        "name",
-        "area",
-        "cuisine",
-        "rating",
-        "rating_count",
-        "cost_for_two",
-    ]
+    RESTAURANT_COLUMNS
 
     return (
-        results[columns_to_keep]
+        results[RESTAURANT_COLUMNS]
         .sort_values(by=["rating_count", "rating"], ascending=[False, False])
         .head(top_n)
         .reset_index(drop=True)

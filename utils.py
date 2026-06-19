@@ -1,5 +1,6 @@
 # Helper utility functions
 
+
 def format_currency(value):
     """
     Format currency values.
@@ -16,40 +17,59 @@ def format_number(value):
     return f"{value:,}"
 
 
-
 def apply_space_theme(fig):
 
     fig.update_layout(
 
-        paper_bgcolor="#000008",
-        plot_bgcolor="#000008",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
 
         font=dict(
             family="Exo 2",
-            color="#E8E8FF"
-        ),
-
-        title_font=dict(
-            family="Orbitron",
-            color="#00D4FF",
-            size=20
+            color="#E8E8FF",
+            size=13
         ),
 
         xaxis=dict(
-            gridcolor="#1A1A3E",
-            zerolinecolor="#1A1A3E"
+            showgrid=True,
+            gridcolor="rgba(26,26,62,0.20)",
+            zeroline=False,
+            showline=False,
+            tickfont=dict(color="#E8E8FF")
         ),
 
         yaxis=dict(
-            gridcolor="#1A1A3E",
-            zerolinecolor="#1A1A3E"
+            showgrid=True,
+            gridcolor="rgba(26,26,62,0.20)",
+            zeroline=False,
+            showline=False,
+            tickfont=dict(color="#E8E8FF")
         ),
 
         hoverlabel=dict(
             bgcolor="#0A0A1A",
             bordercolor="#00D4FF",
-            font_color="#E8E8FF"
-        )
+            font=dict(
+                family="Exo 2",
+                color="#E8E8FF"
+            )
+        ),
+
+        margin=dict(
+            l=20,
+            r=20,
+            t=20,
+            b=20
+        ),
+
+        showlegend=False
     )
+
+    fig.update_traces(
+    marker_color="#00D4FF",
+    marker_line_color="#7B2FBE",
+    marker_line_width=1.5,
+    opacity=0.95
+)
 
     return fig

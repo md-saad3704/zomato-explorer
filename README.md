@@ -9,7 +9,7 @@ An interactive multi-city restaurant analytics dashboard built using Python, Pan
 
 ## Project Overview
 
-Zomato India Restaurant Explorer is a data analytics and visualization project that transforms raw restaurant data into actionable insights through an interactive dashboard.
+India Restaurant Explorer is a data analytics and visualization project that transforms raw restaurant data into actionable insights through an interactive dashboard.
 
 The project analyzes over 224,000 restaurant records across 83 Indian cities and provides insights into restaurant trends, cuisine preferences, locality dynamics, pricing patterns, and restaurant discovery.
 

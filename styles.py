@@ -2,7 +2,7 @@
 # APPLICATION SETTINGS
 # ==================================================
 
-PAGE_TITLE = "Zomato India Restaurant Explorer"
+PAGE_TITLE = "India Restaurant Explorer"
 
 TOP_N = 10
 

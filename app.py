@@ -39,7 +39,7 @@ from analysis import (
 # PAGE CONFIG
 # --------------------------------------------------
 
-st.set_page_config(page_title=PAGE_TITLE, layout="wide")
+st.set_page_config(page_title=PAGE_TITLE, page_icon="🍽️", layout="wide")
 
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
@@ -129,7 +129,7 @@ def render_footer():
         <center>
 
         <h3 style="color:#00D4FF;">
-        ZOMATO INDIA RESTAURANT EXPLORER
+        INDIA RESTAURANT EXPLORER
         </h3>
 
         <p>Built by Muhammad Saad Kamal</p>
@@ -260,7 +260,7 @@ if selected_page == "Overview":
                 0 0 10px rgba(0,212,255,0.6),
                 0 0 20px rgba(0,212,255,0.3);
         ">
-            ZOMATO INDIA EXPLORER
+            INDIA RESTAURANT EXPLORER
         </h1>
         """,
         unsafe_allow_html=True,

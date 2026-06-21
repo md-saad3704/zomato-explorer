@@ -249,7 +249,7 @@ Current Focus:
 
 ## Dashboard Preview
 
-![Overview](assets/overview.png)
+![Overview](assets/Overview.png)
 ![cuisine-insights](assets/cuisine-insights.png)
 ![locality-analysis](assets/locality-analysis.png)
 ![1. area-intelligence](assets/1_area-intelligence.png)

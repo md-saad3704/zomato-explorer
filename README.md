@@ -5,7 +5,7 @@ An interactive multi-city restaurant analytics dashboard built using Python, Pan
 
 ## Live Demo
 
-https://india-food-analytics.streamlit.app/
+
 
 ## Project Overview
 
@@ -16,7 +16,7 @@ The project analyzes over 224,000 restaurant records across 83 Indian cities and
 ## Dataset
 
 * Source: Kaggle Zomato India Restaurants Dataset
-* Records: 224,514 cleaned restaurant records
+* Records: 220,866 cleaned restaurant records
 * Cities Covered: 83
 * Data Collection Year: 2019
 
@@ -244,3 +244,15 @@ Current Focus:
 - GitHub Documentation
 - Streamlit Cloud Deployment
 - Portfolio Presentation
+
+
+
+## Dashboard Preview
+
+![Overview](assets/overview.png)
+![cuisine-insights](assets/cuisine-insights.png)
+![locality-analysis](assets/locality-analysis.png)
+![1. area-intelligence](assets/1_area-intelligence.png)
+![2. area-intelligence](assets/2_area-intelligence.png)
+![1. restaurant-discovery](assets/1_restaurant-discovery.png)
+![2. restaurant-discovery](assets/2_restaurant-discovery.png)

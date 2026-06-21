@@ -5,6 +5,7 @@ An interactive multi-city restaurant analytics dashboard built using Python, Pan
 
 ## Live Demo
 
+https://indiafoodexplorer.streamlit.app/
 
 
 ## Project Overview
